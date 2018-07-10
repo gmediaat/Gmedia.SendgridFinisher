@@ -1,0 +1,27 @@
+{
+  "name": "gmedia/sendgridfinisher",
+  "description": "Core Site Package, powered by G-Media",
+  "type": "neos-package",
+  "version": "1.0.0-beta.1",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Felix Gradinaru",
+      "email": "felix@g-media.at"
+    }
+  ],
+  "require": {
+    "neos/neos": "^3.0 || ^4.0",
+    "sendgrid/sendgrid": "^7.0"
+  },
+  "extra": {
+    "neos": {
+      "package-key": "Gmedia.SendgridFinisher"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+        "Gmedia\\SendgridFinisher\\": "Classes"
+    }
+  }
+}

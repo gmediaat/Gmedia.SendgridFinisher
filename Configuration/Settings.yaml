@@ -1,0 +1,34 @@
+Neos:
+  Form:
+    presets:
+      default:
+        finisherPresets:
+          'Gmedia.SendgridFinisher:SingleEmailFinisher':
+            implementationClassName: Gmedia\SendgridFinisher\Finishers\SingleEmailFinisher
+            options:
+              'tracking_settings':
+                'click_tracking':
+                  'enable': false
+                  'enable_text': ''
+                'open_tracking':
+                  'enable': false
+                  'substitution_tag': ''
+                'subscription_tracking':
+                  'enable': false
+                  'text': ''
+                  'html': ''
+                  'substitution_tag': ''
+                'ganalytics':
+                  'enable': false
+                  'utm_source': ''
+                  'utm_medium': ''
+                  'utm_term': ''
+                  'utm_content': ''
+                  'utm_campaign': ''
+          'Gmedia.SendgridFinisher:MultipleEmailFinisher':
+            implementationClassName: Gmedia\SendgridFinisher\Finishers\MultipleEmailFinisher
+            options: {  }
+
+Gmedia:
+  SendgridFinisher:
+    apiKey: ''
