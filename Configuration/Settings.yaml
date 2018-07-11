@@ -6,10 +6,10 @@ Neos:
           'Gmedia.SendgridFinisher:SingleEmailFinisher':
             implementationClassName: Gmedia\SendgridFinisher\Finishers\SingleEmailFinisher
             options:
-              'tracking_settings':
+              'trackingSettings':
                 'click_tracking':
                   'enable': false
-                  'enable_text': ''
+                  'enable_text': false
                 'open_tracking':
                   'enable': false
                   'substitution_tag': ''
