@@ -29,7 +29,7 @@ finishers:
   -
     identifier: 'Gmedia.SendgridFinisher:EmailFinisher'
     options:
-      templatePathAndFilename: resource://Neos.Demo/Private/Templates/ContactForm/Email.txt
+      templatePathAndFilename: 'resource://Neos.Demo/Private/Templates/ContactForm/Email.txt'
       subject: 'Contact from neos.io'
       recipients:
         - name: 'John Doe'
@@ -43,14 +43,12 @@ finishers:
 ## Templates
 
 To use a Sendgrid template, just add your `templateId` to `options`.
-**Important:** to ensure correct rendering, don't forget to also
-switch format to html: `format: 'html'`
 
 # Reference
 ## Configuration
 
-To enable email transport, you will need to set your
-Sendgrid API key.
+To enable email transport, you will need to add your
+SendGrid API key to your configuration.
 
 ```yaml
 Gmedia:

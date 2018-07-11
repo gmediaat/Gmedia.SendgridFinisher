@@ -2,7 +2,7 @@
   "name": "gmedia/sendgridfinisher",
   "description": "A Neos.Form finisher for the Sendgrid API",
   "type": "neos-package",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "license": "GPL-3.0-or-later",
   "authors": [
     {
