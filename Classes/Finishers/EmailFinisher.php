@@ -15,7 +15,7 @@ use SendGrid\Mail\Bcc as Bcc;
 use SendGrid;
 
 /**
- * This finisher sends an email via Sendgrid
+ * This finisher sends an email via SendGrid
  */
 
 class EmailFinisher extends AbstractFinisher
@@ -276,19 +276,6 @@ class EmailFinisher extends AbstractFinisher
                     );
                     continue;
                 }
-                if (!isset($attachmentConfiguration['formElement'])) {
-                    throw new FinisherException('The "attachments" options need to specify a "resource" path or a "formElement" containing the resource to attach', 1503396636);
-                }
-                $resource = ObjectAccess::getPropertyPath($formValues, $attachmentConfiguration['formElement']);
-                if (!$resource instanceof PersistentResource) {
-                    continue;
-                }
-                $fileEncoded = base64_encode(stream_get_contents($resource->getStream()));
-                $this->email->addAttachment(
-                    $fileEncoded,
-                    $resource->getMediaType(),
-                    $resource->getFilename()
-                );
             }
         }
     }

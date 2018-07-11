@@ -6,6 +6,7 @@ Neos:
           'Gmedia.SendgridFinisher:EmailFinisher':
             implementationClassName: Gmedia\SendgridFinisher\Finishers\EmailFinisher
             options:
+              'format': 'html'
               'trackingSettings':
                 'click_tracking':
                   'enable': false
