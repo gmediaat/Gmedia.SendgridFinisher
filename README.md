@@ -1,4 +1,4 @@
-Sendgrid Finisher for Neos.Form
+SendGrid Finisher for Neos.Form
 =============
 
 A set of Neos.Form finishers for Sendgrid, using the [official SendGrid library](#). 
@@ -21,20 +21,24 @@ composer update
 ```
 # Usage
 
-To use 
+To use this finisher in your form configuration, you just need to add the following 
+definitions to it:
 
 ```yaml
 finishers:
   -
-    identifier: 'Neos.Form:Email'
+    identifier: 'Gmedia.SendgridFinisher:EmailFinisher'
     options:
-      templatePathAndFilename: resource://AcmeCom.SomePackage/Private/Templates/Form/Contact.txt
-      subject: '{subject}'
-      recipientAddress: 'info@acme.com'
-      recipientName: 'Acme Customer Care'
-      senderAddress: '{email}'
-      senderName: '{name}'
-      format: plaintext
+      templatePathAndFilename: resource://Neos.Demo/Private/Templates/ContactForm/Email.txt
+      subject: 'Contact from neos.io'
+      recipients:
+        - name: 'John Doe'
+          email: 'john.doe@neos.io'
+      senderAddress: 'demo@neos.io'
+      senderName: 'Neos Demo Site'
+      replyToAddress: 'demo-reply@neos.io'
+      attachments:
+        - resource: 'resource://Neos.Demo/Private/Templates/ContactForm/Email.txt'
 ```
 ## Templates
 
@@ -56,10 +60,8 @@ Gmedia:
 
 ## Finisher Options 
 
-### message *(string)*
-The content of your email. It can be either
-    plain text or html. In the latter case, don't forget
-    to set `format: 'html'`
+### templatePathAndFilename *(string)*
+Defines the resource path to the template of your email content.
     
 ### subject *(string)*
 Defines the subject of the email.
@@ -74,19 +76,31 @@ recipients:
   -  'email': 'john@doe.com'
      'name': 'John Doe'
 ```
-### carbonCopyRecipients
+### carbonCopyRecipients *(array)*
 See [recipients](#recipients).
 
-### blindCarbonCopyRecipients
+### blindCarbonCopyRecipients *(array)*
 See [recipients](#recipients).
 
 ### senderAddress *(string)*
 Defines the address which will show up as sender.
+```yaml
+senderAddress: 'john.doe@neos.io'
+```
 
 ### senderName *(string)*
 Defines the name which will show up as sender.
+```yaml
+senderName: 'John Doe'
+```
 
-### substitutions
+### replyToAddress *(string)*
+Defines the address which will be set as address to receive replys to this mail.
+```yaml
+replyToAddress: 'john.doe@neos.io'
+```
+
+### substitutions *(array)*
 SendGrid enables you to use variables in your templates, called substitutions. 
 In this array you can define the key-value-pairs used to render the template.
 
@@ -124,13 +138,20 @@ For more information about this options, please refer to the [official SendGrid 
 ```
 
 ### templateId *(string)*
-Defines the id of the template which SendGrid should use to parse your email. 
+Defines the id of the template which SendGrid should use to parse your email.
 
 ### additionalHeaders *(array)*
-You can define additional headers to be sent along to the other headers of the email.
+Defines additional headers to be sent along to the other headers of the email.
 
-### attachments
+### format *(string)*
+Defines the format of the email to be sent. It can either be `plaintext` or `html`. 
+**Notice:** `plaintext` will break HTML-behaviour of your SendGrid template if set!
 
+### testMode *(boolean)*
+If `true`, the email will not be sent and you will get a dump of the 
+email object instead. 
+
+### attachments *(array)*
 At the moment, we could only test adding resources as attachments. This can be done this way:
 
 ```yaml
