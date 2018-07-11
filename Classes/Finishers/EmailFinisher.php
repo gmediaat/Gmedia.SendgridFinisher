@@ -18,7 +18,7 @@ use SendGrid;
  * This finisher sends an email via Sendgrid
  */
 
-class SingleEmailFinisher extends AbstractFinisher
+class EmailFinisher extends AbstractFinisher
 {
 
     const FORMAT_PLAINTEXT = 'plaintext';
@@ -74,23 +74,20 @@ class SingleEmailFinisher extends AbstractFinisher
 
         // Get Options
         $subject = $this->parseOption('subject');
-        $recipientAddress = $this->parseOption('recipientAddress');
-        $recipientName = $this->parseOption('recipientName');
         $recipients = $this->parseOption('recipients');
         $carbonCopyRecipients = $this->parseOption('carbonCopyRecipients');
         $blindCarbonCopyRecipients = $this->parseOption('blindCarbonCopyRecipients');
         $senderAddress = $this->parseOption('senderAddress');
         $senderName = $this->parseOption('senderName');
         $replyToAddress = $this->parseOption('replyToAddress');
-        // $carbonCopyAddress = $this->parseOption('carbonCopyAddress');
-        // $blindCarbonCopyAddress = $this->parseOption('blindCarbonCopyAddress');
         $format = $this->parseOption('format');
 
         // Sendgrid Options
         $templateId = $this->parseOption('templateId');
-        $trackingSettings = $this->parseOption('tracking_settings');
+        $trackingSettings = $this->parseOption('trackingSettings');
         $substitutions = $this->parseOption('substitutions');
         $additionalHeaders = $this->parseOption('additionalHeaders');
+
         $testMode = $this->parseOption('testMode');
 
 
@@ -106,27 +103,16 @@ class SingleEmailFinisher extends AbstractFinisher
                 if(!array_key_exists('name', $recipient))
                     $recipient['name'] = null;
 
-                if(!array_key_exists('substitutions', $recipient))
-                    $recipient['substitutions'] = null;
-
-                if(!array_key_exists('subject', $recipient))
-                    $recipient['subject'] = null;
-
-                $to = new To(
-                    $recipient['email'],
-                    $recipient['name'],
-                    $recipient['substitutions'],
-                    $recipient['subject']
-                );
-
-                var_dump($to);
-
                 $this->email->addTo(
-                    $to
+                    new To(
+                        $recipient['email'],
+                        $recipient['name']
+                    )
                 );
+
             }
         } else {
-            $this->email->addTo($recipientAddress, $recipientName);
+            throw new FinisherException("You need to add at least one recipient!");
         }
 
         if(is_array($carbonCopyRecipients)) {
@@ -137,20 +123,13 @@ class SingleEmailFinisher extends AbstractFinisher
                 if(!array_key_exists('name', $recipient))
                     $recipient['name'] = null;
 
-                if(!array_key_exists('substitutions', $recipient))
-                    $recipient['substitutions'] = null;
-
-                if(!array_key_exists('subject', $recipient))
-                    $recipient['subject'] = null;
-
                 $this->email->addCc(
                     new Cc(
                         $recipient['email'],
-                        $recipient['name'],
-                        $recipient['substitutions'],
-                        $recipient['subject']
+                        $recipient['name']
                     )
                 );
+
             }
         }
 
@@ -162,30 +141,15 @@ class SingleEmailFinisher extends AbstractFinisher
                 if(!array_key_exists('name', $recipient))
                     $recipient['name'] = null;
 
-                if(!array_key_exists('substitutions', $recipient))
-                    $recipient['substitutions'] = null;
-
-                if(!array_key_exists('subject', $recipient))
-                    $recipient['subject'] = null;
-
                 $this->email->addBcc(
                     new Bcc(
                         $recipient['email'],
-                        $recipient['name'],
-                        $recipient['substitutions'],
-                        $recipient['subject']
+                        $recipient['name']
                     )
                 );
+
             }
         }
-
-        // if($carbonCopyAddress !== null) {
-        //     $this->email->addCc($carbonCopyAddress);
-        // }
-
-        // if($blindCarbonCopyAddress != null) {
-        //     $this->email->addBcc($blindCarbonCopyAddress);
-        // }
 
         if($replyToAddress !== null) {
             $this->email->setReplyTo($replyToAddress);
@@ -209,12 +173,41 @@ class SingleEmailFinisher extends AbstractFinisher
             $this->email->addContent("text/html", $message);
         }
 
+        // Tracking Settings
+        $this->email->setClickTracking(
+            $trackingSettings['click_tracking']['enable'],
+            $trackingSettings['click_tracking']['enable_text']
+        );
+
+        $this->email->setOpenTracking(
+            $trackingSettings['open_tracking']['enable'],
+            $trackingSettings['open_tracking']['substitution_tag']
+        );
+
+        $this->email->setGanalytics(
+            $trackingSettings['ganalytics']['enable'],
+            $trackingSettings['ganalytics']['utm_source'],
+            $trackingSettings['ganalytics']['utm_medium'],
+            $trackingSettings['ganalytics']['utm_term'],
+            $trackingSettings['ganalytics']['utm_content'],
+            $trackingSettings['ganalytics']['utm_campaign']
+        );
+
+        $this->email->setSubscriptionTracking(
+            $trackingSettings['subscription_tracking']['enable'],
+            $trackingSettings['subscription_tracking']['text'],
+            $trackingSettings['subscription_tracking']['html'],
+            $trackingSettings['subscription_tracking']['substitution_tag']
+        );
+
+        $this->addAttachments();
+
         if($testMode) {
             \Neos\Flow\var_dump($this->email);
         } else {
             try {
                 $sendgrid = new SendGrid($this->apiKey);
-                $sendgrid->send($this->email);
+                $response = $sendgrid->send($this->email);
             } catch (Exception $e) {
                 throw new FinisherException($e->getMessage());
             }
@@ -250,37 +243,53 @@ class SingleEmailFinisher extends AbstractFinisher
         return $standaloneView;
     }
 
-//    /**
-//     * @param SwiftMailerMessage $mail
-//     * @return void
-//     * @throws FinisherException
-//     */
-//    protected function addAttachments(SwiftMailerMessage $mail)
-//    {
-//        $formValues = $this->finisherContext->getFormValues();
-//        if ($this->parseOption('attachAllPersistentResources')) {
-//            foreach ($formValues as $formValue) {
-//                if ($formValue instanceof PersistentResource) {
-//                    $mail->attach(\Swift_Attachment::newInstance(stream_get_contents($formValue->getStream()), $formValue->getFilename(), $formValue->getMediaType()));
-//                }
-//            }
-//        }
-//        $attachmentConfigurations = $this->parseOption('attachments');
-//        if (is_array($attachmentConfigurations)) {
-//            foreach ($attachmentConfigurations as $attachmentConfiguration) {
-//                if (isset($attachmentConfiguration['resource'])) {
-//                    $mail->attach(\Swift_Attachment::fromPath($attachmentConfiguration['resource']));
-//                    continue;
-//                }
-//                if (!isset($attachmentConfiguration['formElement'])) {
-//                    throw new FinisherException('The "attachments" options need to specify a "resource" path or a "formElement" containing the resource to attach', 1503396636);
-//                }
-//                $resource = ObjectAccess::getPropertyPath($formValues, $attachmentConfiguration['formElement']);
-//                if (!$resource instanceof PersistentResource) {
-//                    continue;
-//                }
-//                $mail->attach(\Swift_Attachment::newInstance(stream_get_contents($resource->getStream()), $resource->getFilename(), $resource->getMediaType()));
-//            }
-//        }
-//    }
+    /**
+     * @return void
+     * @throws FinisherException
+     */
+    protected function addAttachments()
+    {
+        $formValues = $this->finisherContext->getFormValues();
+        if ($this->parseOption('attachAllPersistentResources')) {
+            foreach ($formValues as $formValue) {
+                if ($formValue instanceof PersistentResource) {
+                    $fileEncoded = stream_get_contents($formValue->getStream());
+                    $this->email->addAttachment(
+                        $fileEncoded,
+                        $formValue->getMediaType(),
+                        $formValue->getFilename()
+                    );
+                }
+            }
+        }
+        $attachmentConfigurations = $this->parseOption('attachments');
+        if (is_array($attachmentConfigurations)) {
+            foreach ($attachmentConfigurations as $attachmentConfiguration) {
+                if (isset($attachmentConfiguration['resource'])) {
+                    $fileEncoded = base64_encode(file_get_contents($attachmentConfiguration['resource']));
+                    $filePathArray = explode("/", $attachmentConfiguration['resource']);
+                    $fileName = end($filePathArray);
+                    $this->email->addAttachment(
+                        $fileEncoded,
+                        null,
+                        $fileName
+                    );
+                    continue;
+                }
+                if (!isset($attachmentConfiguration['formElement'])) {
+                    throw new FinisherException('The "attachments" options need to specify a "resource" path or a "formElement" containing the resource to attach', 1503396636);
+                }
+                $resource = ObjectAccess::getPropertyPath($formValues, $attachmentConfiguration['formElement']);
+                if (!$resource instanceof PersistentResource) {
+                    continue;
+                }
+                $fileEncoded = base64_encode(stream_get_contents($resource->getStream()));
+                $this->email->addAttachment(
+                    $fileEncoded,
+                    $resource->getMediaType(),
+                    $resource->getFilename()
+                );
+            }
+        }
+    }
 }

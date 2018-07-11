@@ -3,8 +3,8 @@ Neos:
     presets:
       default:
         finisherPresets:
-          'Gmedia.SendgridFinisher:SingleEmailFinisher':
-            implementationClassName: Gmedia\SendgridFinisher\Finishers\SingleEmailFinisher
+          'Gmedia.SendgridFinisher:EmailFinisher':
+            implementationClassName: Gmedia\SendgridFinisher\Finishers\EmailFinisher
             options:
               'trackingSettings':
                 'click_tracking':
@@ -25,9 +25,6 @@ Neos:
                   'utm_term': ''
                   'utm_content': ''
                   'utm_campaign': ''
-          'Gmedia.SendgridFinisher:MultipleEmailFinisher':
-            implementationClassName: Gmedia\SendgridFinisher\Finishers\MultipleEmailFinisher
-            options: {  }
 
 Gmedia:
   SendgridFinisher:
