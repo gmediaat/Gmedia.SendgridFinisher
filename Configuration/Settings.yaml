@@ -30,3 +30,6 @@ Neos:
 Gmedia:
   SendgridFinisher:
     apiKey: ''
+    apiOptions:
+      mailSettings:
+        sandboxMode: false

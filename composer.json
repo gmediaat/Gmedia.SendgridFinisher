@@ -1,27 +1,30 @@
 {
-  "name": "gmedia/sendgridfinisher",
-  "description": "A Neos.Form finisher for the Sendgrid API",
-  "type": "neos-package",
-  "version": "1.0.0",
-  "license": "GPL-3.0-or-later",
-  "authors": [
-    {
-      "name": "Felix Gradinaru",
-      "email": "felix@g-media.at"
+    "name": "gmedia/sendgridfinisher",
+    "description": "A Neos.Form finisher for the Sendgrid API",
+    "type": "neos-package",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Felix Gradinaru",
+            "email": "felix@g-media.at"
+        }
+    ],
+    "require": {
+        "neos/neos": "^4.0",
+        "neos/form": "^4.0",
+        "sendgrid/sendgrid": "^7.3"
+    },
+    "suggest": {
+        "gmedia/sendgridfinisher-nodetypes": "Adds a NodeBasedFinisher for SendGrid to be used with Neos.Form.Builder"
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Gmedia.SendgridFinisher"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Gmedia\\SendgridFinisher\\": "Classes"
+        }
     }
-  ],
-  "require": {
-    "neos/neos": "^3.0 || ^4.0",
-    "sendgrid/sendgrid": "^7.0"
-  },
-  "extra": {
-    "neos": {
-      "package-key": "Gmedia.SendgridFinisher"
-    }
-  },
-  "autoload": {
-    "psr-4": {
-        "Gmedia\\SendgridFinisher\\": "Classes"
-    }
-  }
 }

@@ -1,0 +1,5 @@
+Gmedia:
+  SendgridFinisher:
+    apiOptions:
+      mailSettings:
+        sandboxMode: true
