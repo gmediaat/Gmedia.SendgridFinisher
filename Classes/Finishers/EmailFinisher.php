@@ -273,7 +273,7 @@ class EmailFinisher extends AbstractFinisher
 
         $this->addAttachments();
 
-        if($testMode) {
+        if($testMode === true) {
             \Neos\Flow\var_dump($this->email);
         } else {
             try {
